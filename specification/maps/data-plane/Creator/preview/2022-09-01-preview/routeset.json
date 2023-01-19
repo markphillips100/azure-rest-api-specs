@@ -34,7 +34,7 @@
       "type": "apiKey",
       "description": "This is a shared key that is provisioned when you [Create an Azure Maps account](https://docs.microsoft.com/azure/azure-maps/quick-demo-map-app#create-an-azure-maps-account) in the Azure portal or using PowerShell, CLI, Azure SDKs, or REST API.\n\n With this key, any application can access all REST API. In other words, this key can be used as a master key in the account that they are issued in.\n\n For publicly exposed applications, our recommendation is to use the [confidential client applications](https://docs.microsoft.com/azure/azure-maps/authentication-best-practices#confidential-client-applications) approach to access Azure Maps REST APIs so your key can be securely stored.",
       "name": "subscription-key",
-      "in": "query"
+      "in": "header"
     },
     "SasToken": {
       "type": "apiKey",
@@ -77,16 +77,16 @@
         }
       }
     },
-    "RoutesetsList": {
-      "description": "The response model for the Routeset List API. Returns the list of all routesets.",
+    "RouteSetsList": {
+      "description": "The response model for the Routeset List API. Returns the list of all routeSets.",
       "type": "object",
       "properties": {
-        "routesets": {
-          "description": "The list of all routesets.",
+        "routeSets": {
+          "description": "The list of all routeSets.",
           "type": "array",
           "readOnly": true,
           "items": {
-            "$ref": "#/definitions/Routeset"
+            "$ref": "#/definitions/RouteSet"
           }
         },
         "nextLink": {
@@ -96,17 +96,17 @@
         }
       }
     },
-    "Routeset": {
-      "description": "Detailed information for the routeset.",
+    "RouteSet": {
+      "description": "Detailed information for the routeSet.",
       "type": "object",
       "properties": {
-        "routesetId": {
-          "description": "The unique ID of the routeset.",
+        "routeSetId": {
+          "description": "The unique ID of the routeSet.",
           "type": "string",
           "readOnly": true
         },
-        "datasetId": {
-          "description": "The ID of the dataset used to create this routeset.",
+        "dataSetId": {
+          "description": "The ID of the dataSet used to create this routeSet.",
           "type": "string",
           "readOnly": true
         },
@@ -115,7 +115,7 @@
           "type": "string",
           "readOnly": true
         },
-        "facilities": {
+        "facilityDetails": {
           "description": "The facility information and building level ordinal numbers.",
           "type": "array",
           "items": {
@@ -156,7 +156,7 @@
       "description": "User provided description of the routeset.",
       "type": "string",
       "in": "query",
-      "x-ms-parameter-location": "client"
+      "x-ms-parameter-location": "method"
     },
     "QueryRoutesetId": {
       "name": "routesetId",
@@ -222,7 +222,7 @@
       },
       "get": {
         "description": "**Applies to:** see [pricing tiers](https://aka.ms/AzureMapsPricingTier).\n\nCreator makes it possible to develop applications based on your private indoor map data using Azure Maps API and SDK. See the [Creator for indoor maps](https://docs.microsoft.com/azure/azure-maps/creator-indoor-maps) article for an introduction to the Azure Maps Creator concepts and tools.\n\nThis API allows the caller to fetch a list of all routesets in the current Azure Maps Creator account.",
-        "operationId": "Routeset_List",
+        "operationId": "RouteSet_List",
         "x-ms-examples": {
           "Enumerate all routesets for a given subscription": {
             "$ref": "./examples/wayfind/Routeset_List.json"
@@ -237,14 +237,14 @@
           }
         ],
         "x-ms-pageable": {
-          "itemName": "routesets",
+          "itemName": "routeSets",
           "nextLinkName": "nextLink"
         },
         "responses": {
           "200": {
             "description": "List routeset request completed successfully. The response body contains a list of all routesets.",
             "schema": {
-              "$ref": "#/definitions/RoutesetsList"
+              "$ref": "#/definitions/RouteSetsList"
             }
           },
           "default": {
@@ -277,7 +277,7 @@
           "200": {
             "description": "The get routeset request completed successfully.",
             "schema": {
-              "$ref": "#/definitions/Routeset"
+              "$ref": "#/definitions/RouteSet"
             }
           },
           "default": {
@@ -295,10 +295,10 @@
         },
         "parameters": [
           {
-            "$ref": "#/parameters/DeleteRoutesetId"
+            "$ref": "../../../Common/preview/1.0/common.json#/parameters/ClientId"
           },
           {
-            "$ref": "../../../Common/preview/1.0/common.json#/parameters/ClientId"
+            "$ref": "#/parameters/DeleteRoutesetId"
           },
           {
             "$ref": "#/parameters/ApiVersion"

@@ -34,7 +34,7 @@
       "type": "apiKey",
       "description": "This is a shared key that is provisioned when you [Create an Azure Maps account](https://docs.microsoft.com/azure/azure-maps/quick-demo-map-app#create-an-azure-maps-account) in the Azure portal or using PowerShell, CLI, Azure SDKs, or REST API.\n\n With this key, any application can access all REST API. In other words, this key can be used as a master key in the account that they are issued in.\n\n For publicly exposed applications, our recommendation is to use the [confidential client applications](https://docs.microsoft.com/azure/azure-maps/authentication-best-practices#confidential-client-applications) approach to access Azure Maps REST APIs so your key can be securely stored.",
       "name": "subscription-key",
-      "in": "query"
+      "in": "header"
     },
     "SasToken": {
       "type": "apiKey",
@@ -56,7 +56,20 @@
       "SasToken": []
     }
   ],
-  "responses": {},
+  "responses": {
+    "200AsyncConversionOperation": {
+      "description": "The operation is running or complete. If the operation was successful, use the Resource-Location header to obtain the path to the result.",
+      "schema": {
+        "$ref": "#/definitions/LongRunningConversionOperationResult"
+      },
+      "headers": {
+        "Resource-Location": {
+          "type": "string",
+          "description": "If successful, a URI where details on the newly created resource can be found."
+        }
+      }
+    }
+  },
   "parameters": {
     "ApiVersion": {
       "name": "api-version",
@@ -93,7 +106,7 @@
         "facility-2.0"
       ],
       "x-ms-enum": {
-        "name": "OutputOntology",
+        "name": "OutputOntology2",
         "modelAsString": true,
         "values": [
           {
@@ -153,9 +166,6 @@
           }
         ],
         "responses": {
-          "200": {
-            "$ref": "../../../Common/preview/1.0/common.json#/responses/200AsyncV2"
-          },
           "202": {
             "$ref": "../../../Common/preview/1.0/common.json#/responses/202AsyncV2"
           },
@@ -272,6 +282,9 @@
         },
         "parameters": [
           {
+            "$ref": "../../../Common/preview/1.0/common.json#/parameters/ClientId"
+          },
+          {
             "$ref": "#/parameters/ApiVersion"
           },
           {
@@ -280,7 +293,7 @@
         ],
         "responses": {
           "200": {
-            "$ref": "../../../Common/preview/1.0/common.json#/responses/200AsyncV2"
+            "$ref": "#/responses/200AsyncConversionOperation"
           },
           "default": {
             "$ref": "../../../Common/preview/1.0/common.json#/responses/default"
@@ -290,6 +303,75 @@
     }
   },
   "definitions": {
+    "LongRunningOperationProperties": {
+      "type": "object",
+      "description": "The long running operation properties.",
+      "properties": {
+        "diagnosticPackageLocation": {
+          "readOnly": true,
+          "type": "string",
+          "description": "The diagnostic package location."
+        }
+      }
+    },
+    "LongRunningConversionOperationResult": {
+      "description": "The response model for a Long-Running Converstion Operations API.",
+      "type": "object",
+      "properties": {
+        "operationId": {
+          "description": "The Id for this long-running operation.",
+          "type": "string"
+        },
+        "status": {
+          "description": "The status state of the request.",
+          "type": "string",
+          "enum": [
+            "NotStarted",
+            "Running",
+            "Failed",
+            "Succeeded"
+          ],
+          "x-ms-enum": {
+            "name": "LroStatus",
+            "modelAsString": true,
+            "values": [
+              {
+                "value": "NotStarted",
+                "description": "The request has not started processing yet."
+              },
+              {
+                "value": "Running",
+                "description": "The request has started processing."
+              },
+              {
+                "value": "Failed",
+                "description": "The request has one or more failures."
+              },
+              {
+                "value": "Succeeded",
+                "description": "The request has successfully completed."
+              }
+            ]
+          },
+          "readOnly": true
+        },
+        "created": {
+          "description": "The created timestamp.",
+          "type": "string",
+          "format": "date-time",
+          "readOnly": true
+        },
+        "error": {
+          "$ref": "../../../../../common-types/data-plane/v1/types.json#/definitions/ErrorDetail"
+        },
+        "warning": {
+          "$ref": "../../../../../common-types/data-plane/v1/types.json#/definitions/ErrorDetail"
+        },
+        "properties": {
+          "$ref": "#/definitions/LongRunningOperationProperties"
+        }
+      }
+    },
     "ConversionListResult": {
       "description": "The response model for the Conversion List API.",
       "type": "object",

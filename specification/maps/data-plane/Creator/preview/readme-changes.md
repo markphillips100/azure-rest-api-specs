@@ -11,7 +11,7 @@ autorest --tag=package-preview-2022-09
 
 ## Observations and changes
 
-1. Initial autorest build fails mostly due to `securityDefinitions:SharedKey:in` schema property having `query` value.  This is of course required by the actual API but fails the schema validation.  In my particular use case I want to use AAD so only rely on the `ClientId` being supplied as a header in all API calls (for which it was missing in a few).  To bypass the schema validation, this was changed to `header`.  It means no `ubscription-key` can be used but allows for me to continue.
+1. Initial autorest build fails mostly due to `securityDefinitions:SharedKey:in` schema property having `query` value.  This is of course required by the actual API but fails the schema validation.  In my particular use case I want to use AAD so only rely on the `ClientId` being supplied as a header in all API calls (for which it was missing in a few).  To bypass the schema validation, this was changed to `header`.  It means no `subscription-key` can be used but allows for me to continue.
 
 2. Added `ClientId` property to parameters of all calls where missing
 
